@@ -392,8 +392,8 @@ class demucs_phase(nn.Module):
         
         z = self._spectr(mix)
        
-        x_z = self._magnitude(z)     # fft_amp
-        x_p = th.atan2(z.imag, z.real) # fft_pha
+        x_z = self._magnitude(z)
+        x_p = th.atan2(z.imag, z.real)
         
         
         mean_z = x_z.mean(dim=(1, 2, 3), keepdim=True)
@@ -457,8 +457,9 @@ class demucs_phase(nn.Module):
                 x_p = rearrange(x_p, "b c f t-> b c (f t)")
                 x_p = self.channel_upsampler(x_p)
                 x_p = rearrange(x_p, "b c (f t)-> b c f t", f=f)
+            
             x_z, x_p = self.crosstransformer(x_z, x_p)
-                    
+            
         for idx in range(len(self.decoder_z)):
             decode_z = self.decoder_z[idx]
             skip_z = saved_z.pop(-1)
